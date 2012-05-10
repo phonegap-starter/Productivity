@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="test.ant" name="PGBStarter" basedir=".">
+
+	<property file="build.properties"/>
+
+	<target name="build" depends="clean,copyFilesToBuild" description="Creating a clean copy of the site" />
+
+	<target name="deployToPGB" depends="build,zip,uploadFilesToPGB" description="Sending Files to Phone Gap Build" />
+
+	<target name="deployToAndroid" depends="deployToPGB, installOnToAndroidDevice, notifyAndroid" description="Update all code to an attached Android Device." />
+
+	<target name="deployToiOS" depends="deployToPGB, installOnToiOSDevice, notifyiOS" description="Update all code to an attached iOS Device." />
+
+	<target name="deployToDevices" depends="deployToiOS, deployToAndroid" description="Update all code to an attached Android and iOS Devices." />
+
+
+	<target name="test.ant" description="Exports the script of the database ">
+		<echo message="Testing ant in this environment. " />
+		<echo message="basedir:     ${basedir}" />
+		<echo message="ant.version: ${ant.version}" />
+		<echo message="build.dir:     ${build.dir}" />
+		<echo message="package.dir:     ${package.dir}" />
+	</target>
+
+	<target name="clean">
+		<echo message="Cleaning Build Space"/>
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="uploadFilesToPGB" description="Handles uploading files to PhoneGap Build">
+		<echo message="Calling PhoneGap Build API's"/>
+		<exec executable='curl' failonerror='true'>
+			<arg value='-u'/>
+			<arg value='${pgb.username}:${pgb.password}'/>
+			<arg value='-X'/>
+			<arg value='PUT'/>
+			<arg value='-F'/>
+			<arg value='file=@${package.dir}/${ant.project.name}.zip'/>
+			<arg value='https://build.phonegap.com/api/v1/apps/${pgb.appid}'/>
+		</exec>
+	</target>
+
+	<target name="installOnToAndroidDevice" description="Installs application onto an attached Android device">
+		<echo message="Calling Commandline"/>
+		<exec executable='./scripts/android.sh' failonerror='true'>
+			<arg value='${pgb.appid}'/>
+			<arg value='${pgb.username}'/>
+			<arg value='${pgb.password}'/>
+			<arg value='${package.dir}'/>
+			<arg value='${android.installer}'/>
+		</exec>
+	</target>
+
+	<target name="installOnToiOSDevice" description="Installs application onto an attached iOS device">
+		<echo message="Calling Commandline"/>
+		<exec executable='./scripts/ios.sh' failonerror='true'>
+			<arg value='${pgb.appid}'/>
+			<arg value='${pgb.username}'/>
+			<arg value='${pgb.password}'/>
+			<arg value='${package.dir}'/>
+			<arg value='${ios.installer}'/>
+		</exec>
+	</target>
+
+	<target name="copyFilesToBuild" description="Create a gitless version of the source code.">
+		<echo message="Copying Files to Build Location"/>
+		<copy todir="${build.dir}" preservelastmodified="true">
+			<fileset dir="${basedir}">
+				<exclude name='.gitignore'/>
+				<exclude name='.git/**'/>
+				<exclude name='build.xml'/>
+				<exclude name='build.properties'/>
+				<exclude name='README'/>
+			</fileset>	
+		</copy>
+	</target>
+
+
+	<target name="zip" description="Creates a zip file of the build.">
+		<echo message="Creating Zip File"/>
+		<zip destfile="${package.dir}\${ant.project.name}.zip" basedir="${build.dir}"/>
+	</target>
+
+
+	<target name="notifyiOS" description="Plays an audio file">
+		<echo message="Playing Audio Alert"/>
+		<exec executable='say' failonerror='true'>
+			<arg value='ios Device is ready'/>
+		</exec>
+	</target>
+
+	<target name="notifyAndroid" description="Plays an audio file">
+		<echo message="Playing Audio Alert"/>
+		<exec executable='say' failonerror='true'>
+			<arg value='Android Device is ready'/>
+		</exec>
+	</target>
+
+
+</project>	
