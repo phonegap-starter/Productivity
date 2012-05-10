@@ -1,0 +1,22 @@
+This project introduces some automation for using PhoneGap Build.  It includes the ability to:
+* Package Applications for PhoneGap Build
+* Upload Applications to PhoneGap Build
+* Listen for notification from PhoneGap Build 
+* Download and install application on Android Devices.
+* Download and install application on IOS Devices.
+
+#NOTE your application will have to be setup to be created from zip instead of a github repository.
+
+
+An optional part of the ANT build process relies on Transporter Chief, which is available here:
+http://gamua.com/blog/2012/03/how-to-deploy-ios-apps-to-the-iphone-via-the-command-line/
+
+Basically in development with the ANT script and transporter Chief you have the option of pushing
+new content to PGB, waiting for it to build, downloading new app, and installing it on an attached 
+iOS device. 
+
+An optional part of the ANT build process relies on the Android SDK
+
+Basically in development with the ANT script and the SDK tool ADB you have the option of pushing
+new content to PGB, waiting for it to build, downloading new app, and installing it on an attached 
+Android device. 
