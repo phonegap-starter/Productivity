@@ -3,7 +3,7 @@
 
 	<property file="build.properties"/>
 
-	<target name="build" depends="clean,copyFilesToBuild" description="Creating a clean copy of the site" />
+	<target name="build" depends="clean,copyFilesToBuild" description="Creating a clean copy of the files" />
 
 	<target name="deployToPGB" depends="build,zip,uploadFilesToPGB" description="Sending Files to Phone Gap Build" />
 
