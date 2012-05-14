@@ -69,8 +69,9 @@
 				<exclude name='.gitignore'/>
 				<exclude name='.git/**'/>
 				<exclude name='build.xml'/>
-				<exclude name='build.properties'/>
-				<exclude name='README'/>
+				<exclude name='*.properties'/>
+				<exclude name='README.md'/>
+				<exclude name='**/scripts/**'/>
 			</fileset>	
 		</copy>
 	</target>
